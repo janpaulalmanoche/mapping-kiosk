@@ -1,4 +1,4 @@
-# Quasar App (awesome-todo)
+# Quasar App (mapping-kiosk)
 
 A Quasar Framework app
 
