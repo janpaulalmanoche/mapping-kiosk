@@ -42,7 +42,7 @@
             </q-card>
         </q-dialog>
 
-
+                <!--modal that lets user type the name of the deceased-->
 
         <q-dialog
                 v-model="medium"
@@ -99,9 +99,66 @@
             </q-card>
         </q-dialog>
 
+        <!--THE MODAL FOR THE SEARCHER-->
+        <q-dialog
+                v-model="searcher"
+                persistent
+        >
+            <q-card style="width: 700px; max-width: 80vw;">
+                <q-card-section>
+                    <div class="q-pa-md">
+                        <q-card class="my-card">
+                            <q-parallax
+                                    src="https://cdn.quasar.dev/img/parallax1.jpg"
+                                    :height="150"
+                            />
+
+                            <q-card-section>
+                                <div class="text-h6">
+
+                                </div>
+                                <!--<div class="text-subtitle2">by John Doe</div>-->
+                                <q-input v-model="searcher_name" label="Tell us who you are" icon="search" />
+                                <br/>
+
+
+                                <q-btn
+                                icon="search"
+                                :loading="loading1"
+                                :percentage="percentage1"
+                                color="primary"
+                                @click="this.proceed"
+                                style="width: 150px"
+                                >
+                                Proceed
+                                <template v-slot:loading>
+                                <q-spinner-gears class="on-left" />
+                                proccessing
+                                </template>
+                                </q-btn>
+
+                                <q-btn class="flat"
+                                       @click="TYPE_NAME"
+                                        color="red-5" label="Close"  style="margin-left: 20px" icon="close" />
+
+                            </q-card-section>
+
+
+                        </q-card>
+                    </div>
+
+                </q-card-section>
+
+                <q-card-actions align="right" class="bg-white text-teal">
+                    <!--<q-btn flat label="OK" v-close-popup />-->
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
+
         <div class="column items-center" style="margin-top: 3px; margin-bottom: 100px;">
             <q-fab color="secondary" push icon="keyboard_arrow_right" direction="right">
-                <q-fab-action color="primary" @click="showNotif('center')" icon="search" />
+                <!--<q-fab-action color="primary" @click="showNotif('center')" icon="search" /> the default function-->
+                <q-fab-action color="primary" @click="TYPE_NAME" icon="search" />
                 <q-fab-action color="orange-7"  to="/" icon="home" />
                 <q-fab-action color="accent"  to="/" icon="close" />
             </q-fab>
@@ -125,6 +182,10 @@
     export default {
         data () {
             return {
+                //for typing the name modal
+                searcher:false,
+                searcher_name:'',
+
                 medium: false,
                 input: '',
                 table:false,
@@ -152,6 +213,15 @@
             quote_:state => state.quotes.quotes
         }),
         methods: {
+            //type name
+            TYPE_NAME(){
+                this.searcher = !this.searcher
+            },
+            //WHEN CLILCIKUING THE PROCEED BUTTON
+            AFTER_TYPE_NAME(){
+
+            },
+
         //for the slecetion button
             close_search(){
                 this.medium = false
@@ -161,7 +231,13 @@
                 this.$store.dispatch('SHOW_PLOT_A')
             },
             setID($id){
-              this.id = $id
+              this.id = $id,
+                  // alert($id)
+                  axios.post('http://127.0.0.1:8000/api/plot-visitor',
+                      {
+                          'id': $id,
+                          'name':this.searcher_name
+                      })
             },
             simulateProgress (number) {
                 // we set loading state
@@ -242,6 +318,7 @@
             showSearchBar() {
                 alert('quote_')
             },
+            //THE MODL FOR TYPING THE NAME OF THE DECEASED
             showNotif (position) {
                 this.picker()
                this.medium = true
@@ -271,7 +348,14 @@
                     timeout: Math.random() * 5000 + 3000
                 })
             },
+            proceed(){
+                this.searcher = false,
+                this.showNotif('center')
+            },
+
             startComputing (id) {
+
+
                 this[`loading${id}`] = true
                 this[`percentage${id}`] = 0
                 this[`interval${id}`] = setInterval(() => {

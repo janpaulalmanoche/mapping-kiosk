@@ -94,6 +94,7 @@
     import Notif from "./Notif";
     import Plot from "./Plot";
     export default {
+
         components: {Plot, Notif},
         methods: {
 
