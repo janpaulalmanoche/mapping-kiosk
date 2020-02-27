@@ -233,7 +233,7 @@
             setID($id){
               this.id = $id,
                   // alert($id)
-                  axios.post('http://127.0.0.1:8000/api/plot-visitor',
+                  axios.post('http://192.168.43.189/api/plot-visitor',
                       {
                           'id': $id,
                           'name':this.searcher_name
@@ -247,7 +247,7 @@
                     // we're done, we reset loading state
                     this[`loading${number}`] = false
 
-                    axios.post('http://127.0.0.1:8000/api/display-plot',
+                    axios.post('http://192.168.43.189/api/display-plot',
                         {
                             'id': this.id
                         }).then((response) =>{
@@ -364,7 +364,7 @@
                         clearInterval(this[`interval${id}`])
 
 
-                        axios.post('http://127.0.0.1:8000/api/search',
+                        axios.post('http://192.168.43.189/api/search',
                             {
                                 'name': this.input
                             }).then((response) =>{
